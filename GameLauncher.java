@@ -9,8 +9,9 @@ public class GameLauncher {
         game.launcher(game.running);
     }
     /**
-     * method for implimenting the main game launcher, 1 keep running
-     * boolean = true will keep the code running
+     * method for implimenting the main game launcher, 1 will keep running
+     * boolean = true w
+     * 2 = false and exits the code
      * @param running
      * @return
      */
