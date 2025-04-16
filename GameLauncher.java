@@ -41,4 +41,3 @@ public class GameLauncher {
         return running;
     }
 }
-
