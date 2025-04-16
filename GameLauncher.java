@@ -21,7 +21,7 @@ public class GameLauncher {
     public boolean launcher(boolean running) {
         Scanner gamemenu = new Scanner(System.in);
         try {
-            while(this.running == true) {
+            if(this.running == true) {
                 System.out.println("Please enter \n 1 for game selection \n 2 to exit menu");
                 int menupick = gamemenu.nextInt();              
                 if (menupick == 1) {
