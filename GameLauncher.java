@@ -1,7 +1,10 @@
 import java.util.Scanner;
 
 public class GameLauncher {
-    private boolean running;
+    GameLauncher() {
+        // Constructor for GameLauncher
+    }
+    boolean running;
     
     public static void main(String[] args) {
         GameLauncher game = new GameLauncher();
@@ -16,17 +19,23 @@ public class GameLauncher {
      * @return
      */
     public boolean launcher(boolean running) {
-        while(this.running == true) {
-            Scanner gamemenu = new Scanner(System.in);
-            System.out.println("Please enter \n 1 for game selection \n 2 to exit menu");
-            int menupick = gamemenu.nextInt();              
-            if (menupick == 1) {
-                running = true;          
-            } else {
-                running = false;
-                this.running = false;
-                gamemenu.close();
+        Scanner gamemenu = new Scanner(System.in);
+        try {
+            while(this.running == true) {
+                System.out.println("Please enter \n 1 for game selection \n 2 to exit menu");
+                int menupick = gamemenu.nextInt();              
+                if (menupick == 1) {
+                    @SuppressWarnings("unused")
+                    GameChoices gameChoices = new GameChoices(); // Create an instance of GameChoices.
+                    GameChoices.main(null); // Call the main method of GameChoices
+                              
+                } else {
+                    running = false;
+                    this.running = false;
+                }
             }
+        } finally {
+            gamemenu.close();
         }
         
         return running;
