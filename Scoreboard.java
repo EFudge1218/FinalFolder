@@ -19,7 +19,13 @@ public class Scoreboard {
         System.out.print("Player 2 enter name: ");
         String playertwo = players.next();
         System.out.println(playertwo + playerone);
-        // Close the Scanner when done
         players.close();
+    }
+    public int addWins(int wins) {
+        this.wins = wins;
+        return wins;
+    }
+    public int getWins() {
+        return wins;
     }
 }

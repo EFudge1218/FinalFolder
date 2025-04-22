@@ -4,9 +4,11 @@ public class TicTacToe {
     TicTacToe(){
         
     }
+    
     public static void main(String[] args) {
 
         Scanner scanner = new Scanner(System.in);
+        GameLauncher gameLauncher = new GameLauncher(); // Create an instance of GameLauncher
 
         //Game loop for "Play Again" feature
         while (true) {
@@ -73,13 +75,14 @@ public class TicTacToe {
             if (!playAgain.equals("yes")) {
 
                 System.out.println("Thanks for playing! Goodbye!");
-                break; //Exit the game loop
+                
+                gameLauncher.launcher(true); // Return to the main menu
+                
 
             }
         }
 
-        //Close the scanner
-        scanner.close();
+        
 
     }
 
