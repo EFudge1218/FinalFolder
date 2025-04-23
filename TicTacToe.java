@@ -74,10 +74,15 @@ public class TicTacToe {
 
             if (!playAgain.equals("yes")) {
 
+<<<<<<< HEAD
+                System.out.println("Thanks for playing!");
+                break; //Exit the game loop
+=======
                 System.out.println("Thanks for playing! Goodbye!");
                 
                 gameLauncher.launcher(true); // Return to the main menu
                 
+>>>>>>> 7dd462b8b8ee24b83353b19479b5d27a3cc09d9f
 
             }
         }
