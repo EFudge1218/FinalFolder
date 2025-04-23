@@ -15,7 +15,6 @@ public class GameLauncher {
         game.running = true;
         game.playerAdd();
         game.launcher(game.running);
-        game.scanner.close(); // Close the Scanner at the end of the program
     }
 
     /**
@@ -35,14 +34,15 @@ public class GameLauncher {
                     @SuppressWarnings("unused")
                     GameChoices gameChoices = new GameChoices(); // Create an instance of GameChoices.
                     GameChoices.main(null); // Call the main method of GameChoices
-
-                } else {
-                    running = false;
+                }
+                if (menupick == 2) {
+                    System.out.println("Thank you for playing");
                     this.running = false;
+                    
                 }
             }
         } catch (Exception e) {
-            System.err.println("An error occurred: " + e.getMessage());
+            System.err.println("Error, Please enter 1 or 2" + e.getMessage());
         }
 
         return running;

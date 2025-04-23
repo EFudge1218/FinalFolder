@@ -77,7 +77,7 @@ public class TicTacToe {
                 System.out.println("Thanks for playing! Goodbye!");
                 
                 gameLauncher.launcher(true); // Return to the main menu
-                
+                return;
 
             }
         }

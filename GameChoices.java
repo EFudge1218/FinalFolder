@@ -33,7 +33,8 @@ public class GameChoices {
             }
             if (gamechosen == 5) {
                 System.out.println("Thank you for playing, goodbye!");
-                gameLauncher.launcher(false); // Exit the game
+    
+                gameLauncher.running = false ; // Exit the game
                 return;
             } else {
                 System.out.println("Invalid choice, please try again.");
