@@ -1,10 +1,12 @@
 import java.util.Scanner;
 
 public class GameChoices {
-    GameChoices() {
-        // Constructor for GameChoices
-    }
-
+GameChoices() {
+    // Constructor for GameChoices
+    GameLauncher gameLauncher = new GameLauncher();
+    gameLauncher.playerAdd();
+}
+    
     public static void main(String[] args) {
         GameLauncher gameLauncher = new GameLauncher();
         try (Scanner gameselect = new Scanner(System.in)) {
@@ -16,15 +18,27 @@ public class GameChoices {
                 return;
             }
             if (gamechosen == 2) {
+                if (gameLauncher.numPlayers != 2) {
+                    System.out.println("Tic Tac Toe is a two player game, please select another game.");
+                    GameChoices.main(args); // Restart the game selection
+                
+                }
                 //calling and creating an instance of the tic tac toe class
                 @SuppressWarnings("unused")
                 TicTacToe tttg = new TicTacToe();
                 TicTacToe.main(args);
                 GameLauncher.main(args);
             }
-            // if (gamechosen == 3) {
-            // gamethree();
-            // }
+             if (gamechosen == 3) {
+                     if (GameLauncher.numPlayers == 1) {
+                        Solitaire game = new Solitaire(); // Create an instance of Solitaire
+                        Solitaire.main(args);
+                        GameChoices.main(args); // Return to the game selection
+                    } else if (gameLauncher.numPlayers >= 2) {
+                        System.out.println("To many players for this game, please select another game.");
+                        GameChoices.main(args); // Restart the game selection
+             }
+             
             if (gamechosen == 4) {
                 System.out.println("Returning to main menu");
                 GameLauncher.main(args); // Return to the main menu
@@ -43,4 +57,5 @@ public class GameChoices {
             }
         }
     }
+}
 }

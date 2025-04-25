@@ -1,6 +1,8 @@
 import java.util.Scanner;
 
 public class GameLauncher {
+    int numPlayers;
+    public static Object playerAdd;
     private Scanner scanner; // Declare a single Scanner object
 
     GameLauncher() {
@@ -41,6 +43,7 @@ public class GameLauncher {
                     
                 }
             }
+            else{System.out.println("Thank you for playing");}
         } catch (Exception e) {
             System.err.println("Error, Please enter 1 or 2" + e.getMessage());
         }
@@ -53,7 +56,7 @@ public class GameLauncher {
      */
     public void playerAdd() {
         System.out.print("Please enter number of players: ");
-        int numPlayers = scanner.nextInt(); // Use the shared Scanner object
+        numPlayers = scanner.nextInt(); // Use the shared Scanner object
         scanner.nextLine();
 
         if (numPlayers == 1) {
