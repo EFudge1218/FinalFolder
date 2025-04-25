@@ -3,9 +3,12 @@ import java.util.Scanner;
 public class GameChoices {
 GameChoices() {
     // Constructor for GameChoices
-    GameLauncher gameLauncher = new GameLauncher();
-    gameLauncher.playerAdd();
+    
+    
 }
+    GameLauncher gameLauncher = new GameLauncher();
+    TicTacToe tttg = new TicTacToe(); // Create an instance of TicTacToe
+    
     
     public static void main(String[] args) {
         GameLauncher gameLauncher = new GameLauncher();
@@ -19,6 +22,7 @@ GameChoices() {
             }
             if (gamechosen == 2) {
                 if (gameLauncher.numPlayers != 2) {
+                    TicTacToe.main(args); // main method of TicTacToe
                     System.out.println("Tic Tac Toe is a two player game, please select another game.");
                     GameChoices.main(args); // Restart the game selection
                 
@@ -30,7 +34,7 @@ GameChoices() {
                 GameLauncher.main(args);
             }
              if (gamechosen == 3) {
-                     if (GameLauncher.numPlayers == 1) {
+                     if (gameLauncher.numPlayers == 1) {
                         Solitaire game = new Solitaire(); // Create an instance of Solitaire
                         Solitaire.main(args);
                         GameChoices.main(args); // Return to the game selection
@@ -46,10 +50,9 @@ GameChoices() {
 
             }
             if (gamechosen == 5) {
-                System.out.println("Thank you for playing, goodbye!");
-    
+
                 gameLauncher.running = false ; // Exit the game
-                return;
+                
             } else {
                 System.out.println("Invalid choice, please try again.");
                 main(args); // Restart the game selection
