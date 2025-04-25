@@ -18,7 +18,7 @@ public class Solitaire {
 
         //Creates foundations as invidual stacks
         Stack<Stack<Card>> foundations = new Stack<>();
-        for(int i =0; i < 4; i++){
+        for(int i = 0; i < 4; i++){
 
             foundations.push(new Stack<>());
 
