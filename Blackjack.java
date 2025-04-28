@@ -1,183 +1,140 @@
 import java.util.*;
 
-class SolitaireRules {
+public class Blackjack {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
 
-    public boolean isValidMoveToFoundation(Card card, Stack<Card> foundation) {
-        if (foundation.isEmpty()) {
-            return "A".equals(card.getRank()); //Foundation starts with an Ace
-        } else {
-            Card topCard = foundation.peek();
-            return card.getSuit().equals(topCard.getSuit()) && 
-                   card.getRankValue() == topCard.getRankValue() + 1;
+        System.out.println("\nWelcome to Blackjack!");
+        System.out.print("\nEnter the number of players (1-4): ");
+        int numPlayers = scanner.nextInt();
+        if (numPlayers < 1 || numPlayers > 4) {
+            System.out.println("\nInvalid number of players. Exiting.");
+            return;
         }
-    }
 
-    public boolean isValidMoveToTableau(Card card, Stack<Card> tableauColumn) {
-        if (tableauColumn.isEmpty()) {
-            return "K".equals(card.getRank()); // Empty tableau column starts with a King
-        } else {
-            Card topCard = tableauColumn.peek();
-            return !card.getSuit().equals(topCard.getSuit()) && 
-                   card.getRankValue() + 1 == topCard.getRankValue();
-        }
-    }
-
-    public boolean canFlipCard(Stack<Card> tableauColumn) {
-        return !tableauColumn.isEmpty(); // Can flip only if the column is not empty
-    }
-
-    public int getRankValue(String rank) {
-        switch (rank) {
-            case "A":
-                return 1;
-            case "J":
-                return 11;
-            case "Q":
-                return 12;
-            case "K":
-                return 13;
-            default:
-                return Integer.parseInt(rank);
-        }
-    }
-}
-
-class Card {
-    private String suit;
-    private String rank;
-
-    public Card(String suit, String rank) {
-        this.suit = suit;
-        this.rank = rank;
-    }
-
-    public String getSuit() {
-        return suit;
-    }
-
-    public String getRank() {
-        return rank;
-    }
-
-    public int getRankValue() {
-        SolitaireRules rules = new SolitaireRules();
-        return rules.getRankValue(rank);
-    }
-
-    @Override
-    public String toString() {
-        return rank + " of " + suit;
-    }
-}
-
-public class Solitaire {
-    private Stack<Card>[] tableau; // 7 columns
-    private Stack<Card>[] foundations; // 4 suit piles
-    private Stack<Card> waste;
-    private Stack<Card> deck;
-    private SolitaireRules rules;
-
-    public Solitaire() {
-        rules = new SolitaireRules();
-        initializeGame();
-    }
-
-    private void initializeGame() {
-        tableau = new Stack[7];
-        foundations = new Stack[4];
-        waste = new Stack<>();
-        deck = createDeck();
+        List<String> deck = createDeck();
         Collections.shuffle(deck);
 
-        // Deal cards to tableau
-        for (int i = 0; i < tableau.length; i++) {
-            tableau[i] = new Stack<>();
-            for (int j = 0; j <= i; j++) {
-                tableau[i].push(deck.pop());
-            }
+        Map<String, List<String>> hands = new HashMap<>();
+        List<String> dealerHand = new ArrayList<>(Arrays.asList(deck.remove(0), deck.remove(0)));
+        hands.put("\nDealer", dealerHand);
+
+        // Show dealer's first card
+        System.out.println("\nDealer's first card: " + dealerHand.get(0));
+
+        for (int i = 1; i <= numPlayers; i++) {
+            hands.put("\nPlayer " + i, new ArrayList<>(Arrays.asList(deck.remove(0), deck.remove(0))));
         }
 
-        // Initialize foundations
-        for (int i = 0; i < foundations.length; i++) {
-            foundations[i] = new Stack<>();
+        // Player turns
+        for (int i = 1; i <= numPlayers; i++) {
+            String player = "\nPlayer " + i;
+            List<String> hand = new ArrayList<>(hands.get(player));
+            System.out.println(player + "'s turn:");
+            hand = playerTurn(scanner, hand, deck);
+            hands.put(player, hand);
+            System.out.println();
         }
+
+        //Dealer's turn
+        System.out.println("\nDealer's turn:");
+        dealerHand = dealerTurn(dealerHand, deck);
+        hands.put("\nDealer", dealerHand);
+        System.out.println();
+
+        //Show hands and determine winner
+        for (String player : hands.keySet()) {
+            List<String> hand = hands.get(player);
+            System.out.println(player + " hand: " + hand + " (Value: " + calculateHand(hand) + ")");
+        }
+
+        determineWinner(hands);
     }
 
-    private Stack<Card> createDeck() {
-        Stack<Card> deck = new Stack<>();
+    // Create deck
+    private static List<String> createDeck() {
+        String[] ranks = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"};
         String[] suits = {"Hearts", "Diamonds", "Clubs", "Spades"};
-        String[] ranks = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
-        for (String suit : suits) {
-            for (String rank : ranks) {
-                deck.push(new Card(suit, rank));
+        List<String> deck = new ArrayList<>();
+        for (String rank : ranks) {
+            for (String suit : suits) {
+                deck.add(rank + " of " + suit);
             }
         }
         return deck;
     }
 
-    public void displayGameState() {
-        System.out.println("Tableau:");
-        for (int i = 0; i < tableau.length; i++) {
-            System.out.println("Column " + (i + 1) + ": " + tableau[i]);
-        }
-        System.out.println("Foundations:");
-        for (int i = 0; i < foundations.length; i++) {
-            System.out.println("Foundation " + (i + 1) + ": " + foundations[i]);
-        }
-        System.out.println("Waste: " + waste);
-    }
-
-    public void play() {
-        Scanner scanner = new Scanner(System.in);
-        while (true) {
-            displayGameState();
-            System.out.println("Enter move (e.g., 'move 1 to foundation' or 'flip 1'): ");
-            String move = scanner.nextLine();
-            handleMove(move);
-            if (checkWinCondition()) {
-                System.out.println("Congratulations! You win!");
-                break;
+    //Calculate hand value
+    private static int calculateHand(List<String> hand) {
+        int value = 0;
+        int aceCount = 0;
+        for (String card : hand) {
+            String rank = card.split(" ")[0];
+            if ("JQK".contains(rank)) {
+                value += 10;
+            } else if (rank.equals("A")) {
+                value += 1;
+                aceCount++;
+            } else {
+                value += Integer.parseInt(rank);
             }
         }
-        scanner.close();
+        // Adjust for Aces
+        while (aceCount > 0 && value + 10 <= 21) {
+            value += 10;
+            aceCount--;
+        }
+        return value;
     }
 
-    private void handleMove(String move) {
-        String[] parts = move.split(" ");
-        if (parts.length < 2) {
-            System.out.println("Invalid move format.");
+    //Player's turn
+    private static List<String> playerTurn(Scanner scanner, List<String> hand, List<String> deck) {
+        while (true) {
+            System.out.println("\nYour hand: " + hand + " (Value: " + calculateHand(hand) + ")");
+            System.out.print("\nHit or Stand? ");
+            String action = scanner.next().toLowerCase();
+            if (action.equals("hit")) {
+                hand.add(deck.remove(0));
+                if (calculateHand(hand) > 21) {
+                    System.out.println("\nBust!");
+                    return hand;
+                }
+            } else if (action.equals("stand")) {
+                return hand;
+            } else {
+                System.out.println("\nInvalid input, please choose 'Hit' or 'Stand'.");
+            }
+        }
+    }
+
+    // Dealer's turn
+    private static List<String> dealerTurn(List<String> hand, List<String> deck) {
+        while (calculateHand(hand) < 17) {
+            hand.add(deck.remove(0));
+        }
+        return hand;
+    }
+
+    // Determine winner
+    private static void determineWinner(Map<String, List<String>> hands) {
+        int dealerValue = calculateHand(hands.get("\nDealer"));
+        if (dealerValue > 21) {
+            System.out.println("\nDealer busts! All players still in the game win!");
             return;
         }
-        switch (parts[0].toLowerCase()) {
-            case "move":
-                // Implement the move logic here
-                System.out.println("Move logic to be added here...");
-                break;
-            case "flip":
-                // Example: Flip top card on a tableau column
-                int column = Integer.parseInt(parts[1]) - 1;
-                if (rules.canFlipCard(tableau[column])) {
-                    System.out.println("Flipping card...");
-                } else {
-                    System.out.println("Cannot flip card.");
-                }
-                break;
-            default:
-                System.out.println("Unknown command.");
-        }
-    }
 
-    private boolean checkWinCondition() {
-        for (Stack<Card> foundation : foundations) {
-            if (foundation.size() < 13) {
-                return false;
+        for (String player : hands.keySet()) {
+            if (player.equals("\nDealer")) continue;
+            int playerValue = calculateHand(hands.get(player));
+            if (playerValue > 21) {
+                System.out.println(player + " busts!");
+            } else if (playerValue > dealerValue || dealerValue > 21) {
+                System.out.println(player + " wins!");
+            } else if (playerValue == dealerValue) {
+                System.out.println(player + " ties with the dealer.");
+            } else {
+                System.out.println(player + " loses.");
             }
         }
-        return true;
-    }
-
-    public static void main(String[] args) {
-        Solitaire game = new Solitaire();
-        game.play();
     }
 }
