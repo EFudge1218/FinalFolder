@@ -8,7 +8,7 @@ GameChoices() {
 }
     GameLauncher gameLauncher = new GameLauncher();
     TicTacToe tttg = new TicTacToe(); // Create an instance of TicTacToe
-    
+
     
     public static void main(String[] args) {
         GameLauncher gameLauncher = new GameLauncher();
@@ -35,11 +35,11 @@ GameChoices() {
             }
              if (gamechosen == 3) {
                      if (gameLauncher.numPlayers == 1) {
-                        Solitaire game = new Solitaire(); // Create an instance of Solitaire
-                        Solitaire.main(args);
+                        Blackjack bjack = new Blackjack(); // Create an instance of Solitaire
+                        Blackjack.main(args);
                         GameChoices.main(args); // Return to the game selection
-                    } else if (gameLauncher.numPlayers >= 2) {
-                        System.out.println("To many players for this game, please select another game.");
+                    } else if (gameLauncher.numPlayers > 4) {
+                        System.out.println("Too many players for this game, please select another game.");
                         GameChoices.main(args); // Restart the game selection
              }
              
@@ -50,7 +50,7 @@ GameChoices() {
 
             }
             if (gamechosen == 5) {
-
+                System.out.println(Scoreboard.scoring); // Print the scores
                 gameLauncher.running = false ; // Exit the game
                 
             } else {

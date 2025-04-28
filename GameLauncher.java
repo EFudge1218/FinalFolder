@@ -2,8 +2,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+
 public class GameLauncher {
-    int numPlayers;
+    public int []scoring;
+    public int numPlayers;
     public static Object playerAdd;
     public Scanner scanner; // Declare a single Scanner object
     GameLauncher() {
@@ -50,14 +52,13 @@ public class GameLauncher {
     }
 
     private List<String> playerNames = new ArrayList<>();
-
-public List<String> playerAdd() {
+    public List<String> playerAdd() {
     playerNames.clear(); // Clear any existing names
     while (true) {
         System.out.print("Please enter number of players (1-4): ");
         if (scanner.hasNextInt()) {
             numPlayers = scanner.nextInt();
-            scanner.nextLine(); // Consume the newline character
+            scanner.nextLine();
             if (numPlayers >= 1 && numPlayers <= 4) {
                 break; // Exit the loop if the input is valid
             } else {
@@ -79,6 +80,10 @@ public List<String> playerAdd() {
         System.out.println("Player " + (i + 1) + ": " + playerNames.get(i));
     }
 
-    return playerNames; // Return the list of player names
+        return playerNames; // Return the list of player names
+        }
+        
+    public void scorekeeper() {
+        scoring = new int[playerNames.size()]; // Initialize the scores array based on the number of players
     }
 }
