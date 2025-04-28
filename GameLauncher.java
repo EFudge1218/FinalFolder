@@ -82,8 +82,4 @@ public class GameLauncher {
 
         return playerNames; // Return the list of player names
         }
-        
-    public void scorekeeper() {
-        scoring = new int[playerNames.size()]; // Initialize the scores array based on the number of players
-    }
 }

@@ -50,7 +50,7 @@ GameChoices() {
 
             }
             if (gamechosen == 5) {
-                System.out.println(Scoreboard.scoring); // Print the scores
+                Scoreboard.main(args); // Call the main method of Scoreboard
                 gameLauncher.running = false ; // Exit the game
                 
             } else {
