@@ -13,13 +13,21 @@ public class TicTacToe {
     public static void startGame(List<String> playerNames, String[] args) {
         Scanner scanner = new Scanner(System.in);
         
-        if (playerNames.size() != 2) {
+        // Check for exactly 2 players
+        if (playerNames == null || playerNames.size() != 2) {
             System.out.println("Tic Tac Toe requires exactly 2 players!");
+            System.out.println("Returning to game selection...");
+            GameChoices.main(args);
             return;
         }
-        
+
+        // Initialize player names from the provided list
         String player1Name = playerNames.get(0);
         String player2Name = playerNames.get(1);
+
+        System.out.println("\nTic Tac Toe Game Starting!");
+        System.out.println(player1Name + " will be X");
+        System.out.println(player2Name + " will be O\n");
 
         //Game loop for "Play Again" feature
         while (true) {
@@ -92,11 +100,15 @@ public class TicTacToe {
     }
     
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
         GameLauncher gameLauncher = new GameLauncher();
-        List<String> playerNames = gameLauncher.playerAdd();
+        List<String> playerNames = gameLauncher.getPlayerNames();
+        
+        // If no players are registered yet, add them
+        if (playerNames.isEmpty()) {
+            playerNames = gameLauncher.playerAdd();
+        }
+        
         startGame(playerNames, args);
-        gameLauncher.launcher(true); // Return to the main menu
     }
 
     //Method to print the current state of the board
