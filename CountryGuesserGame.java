@@ -6,18 +6,11 @@ public class CountryGuesserGame {
     
     static {
         continentCountries.put("South America", new HashSet<>(Arrays.asList(
-            "Argentina", "Bolivia", "Brazil", "Chile", "Colombia", "Ecuador", "Guyana",
-            "Paraguay", "Peru", "Uruguay", "Venezuela"
+            "Argentina", "Brazil", "Chile", "Colombia", "Peru", "Venezuela"
         )));
 
         continentCountries.put("Europe", new HashSet<>(Arrays.asList(
-            "Albania", "Andorra", "Armenia", "Austria", "Azerbaijan", "Belarus", "Belgium",
-            "Bosnia", "Bulgaria", "Croatia", "Cyprus", "Czech Republic", "Denmark", "Estonia",
-            "Finland", "France", "Georgia", "Germany", "Greece", "Hungary", "Iceland", "Ireland",
-            "Italy", "Kosovo", "Latvia", "Liechtenstein", "Lithuania", "Luxembourg", "Malta",
-            "Moldova", "Monaco", "Netherlands", "Norway", "Poland", "Portugal", "Romania",
-            "Russia", "Serbia", "Slovakia", "Slovenia", "Spain", "Sweden", "Switzerland",
-            "Turkey", "Ukraine", "United Kingdom"
+            "Russia", "Germany", "France", "Turkey", "England"
         )));
     }
 
@@ -38,7 +31,7 @@ public class CountryGuesserGame {
 
         while (playAgain) {
             System.out.println("\nWelcome to the Country Guesser Game!");
-            System.out.println("Each player will take turns guessing countries.");
+            System.out.println("Each player will take turns guessing the 5 most populated countries in both Europe and South America.");
             
             Map<String, Integer> playerScores = new HashMap<>();
             for (String player : playerNames) {
