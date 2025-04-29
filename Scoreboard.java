@@ -34,6 +34,12 @@ public class Scoreboard {
             totalScores.merge(entry.getKey(), entry.getValue(), Integer::sum);
         }
 
+        // Add Blackjack wins to total scores
+        Map<String, Integer> blackjackWins = Blackjack.getWins();
+        for (Map.Entry<String, Integer> entry : blackjackWins.entrySet()) {
+            totalScores.merge(entry.getKey(), entry.getValue(), Integer::sum);
+        }
+
         // Update priority queue with latest scores
         updateScoreQueue();
 
