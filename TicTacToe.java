@@ -1,30 +1,40 @@
+import java.util.List;
 import java.util.Scanner;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TicTacToe {
+    private static Map<String, Integer> tictactoeWins = new HashMap<>();
+
     TicTacToe(){
         
     }
     
-    public static void main(String[] args) {
-
+    public static void startGame(List<String> playerNames, String[] args) {
         Scanner scanner = new Scanner(System.in);
-        GameLauncher gameLauncher = new GameLauncher(); // Create an instance of GameLauncher
+        
+        if (playerNames.size() != 2) {
+            System.out.println("Tic Tac Toe requires exactly 2 players!");
+            return;
+        }
+        
+        String player1Name = playerNames.get(0);
+        String player2Name = playerNames.get(1);
 
         //Game loop for "Play Again" feature
         while (true) {
 
             //Initialize the game board (3x3 grid)
             char[][] board = {
-
                 {' ', ' ', ' '},
                 {' ', ' ', ' '},
                 {' ', ' ', ' '}
-
             };
 
-            //Define players' symbols
+            //Define players' symbols and names
             char currentPlayer = 'X';
-
+            String currentPlayerName = player1Name;
+            
             //Single game loop
             while (true) {
 
@@ -32,16 +42,14 @@ public class TicTacToe {
                 printBoard(board);
 
                 //Prompt the current player to make a move
-                System.out.println("Player " + currentPlayer + "'s turn. Enter your move (row and column: 1-3): ");
+                System.out.println(currentPlayerName + "'s turn (" + currentPlayer + "). Enter your move (row and column: 1-3): ");
                 int row = scanner.nextInt() - 1; //Convert to zero-based index
                 int col = scanner.nextInt() - 1;
 
                 //Check if the chosen cell is valid and empty
                 if (row < 0 || row >= 3 || col < 0 || col >= 3 || board[row][col] != ' ') {
-
                     System.out.println("Invalid move! Try again.");
                     continue; //Skip this step and let the player try again
-
                 }
 
                 //Place the player's symbol on the board
@@ -49,22 +57,25 @@ public class TicTacToe {
 
                 //Check for a win or draw
                 if (checkWin(board, currentPlayer)) {
-
                     printBoard(board);
-                    System.out.println("Player " + currentPlayer + " wins!");
+                    System.out.println(currentPlayerName + " wins!");
+                    tictactoeWins.merge(currentPlayerName, 1, Integer::sum);
+                    Scoreboard.updateScore(currentPlayerName, 1);
                     break;
-
                 } else if (isBoardFull(board)) {
-
                     printBoard(board);
                     System.out.println("It's a draw!");
                     break;
-
                 }
 
                 //Switch to the next player
-                currentPlayer = (currentPlayer == 'X') ? 'O' : 'X';
-
+                if (currentPlayer == 'X') {
+                    currentPlayer = 'O';
+                    currentPlayerName = player2Name;
+                } else {
+                    currentPlayer = 'X';
+                    currentPlayerName = player1Name;
+                }
             }
 
             //Ask if the user wants to play again
@@ -73,17 +84,19 @@ public class TicTacToe {
             String playAgain = scanner.nextLine().trim().toLowerCase();
 
             if (!playAgain.equals("yes")) {
-
-                System.out.println("Thanks for playing! Goodbye!");
-                
-                gameLauncher.launcher(true); // Return to the main menu
+                System.out.println("Returning to game selection...");
+                GameChoices.main(args); // Return to game choices menu
                 return;
-
             }
         }
-
-        
-
+    }
+    
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        GameLauncher gameLauncher = new GameLauncher();
+        List<String> playerNames = gameLauncher.playerAdd();
+        startGame(playerNames, args);
+        gameLauncher.launcher(true); // Return to the main menu
     }
 
     //Method to print the current state of the board
@@ -162,5 +175,9 @@ public class TicTacToe {
 
         return true; //Board is full
         
+    }
+
+    public static Map<String, Integer> getWins() {
+        return tictactoeWins;
     }
 }

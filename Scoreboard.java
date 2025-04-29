@@ -2,42 +2,76 @@ import java.util.PriorityQueue;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
 
 public class Scoreboard {
+    private static Map<String, Integer> totalScores = new HashMap<>();
+    private static PriorityQueue<Map.Entry<String, Integer>> scoreQueue = new PriorityQueue<>(
+        Comparator.comparingInt(Map.Entry<String, Integer>::getValue).reversed()
+    );
+
     public Scoreboard() {
+        // Constructor no longer needs to initialize scoreQueue since it's done statically
     }
 
-    /**
-*      * * This is the main method and is also used to create a scoreboard for the game.
-     * @param args
-     */
     public static void main(String[] args) {
+        GameLauncher gameLauncher = new GameLauncher();
+        List<String> playerNames = gameLauncher.playerAdd();
+        
+        // Initialize scores for all players
+        for (String player : playerNames) {
+            totalScores.put(player, 0);
+        }
 
-                PriorityQueue<Integer> scoresQueue = new PriorityQueue<Integer>(); // Initialize the scores PriorityQueue
-        GameLauncher gameLauncher = new GameLauncher(); // Create an instance of GameLauncher
-        int[] scoring = gameLauncher.scoring; // Get the scores array (used with scoresQueue)
-        int numPlayers = gameLauncher.numPlayers; // Get the number of players
-        var playerNames = gameLauncher.playerAdd(); // Get the player names
-
-        // Map to store player names as keys and their scores as values
-        Map<String, Integer> playerScores = new HashMap<>();
-        for (int i = 0; i < numPlayers; i++) {
-            playerScores.put(playerNames.get(i), scoring[i]);
-    }
-
-    // PriorityQueue to sort players by their scores in descending order
-        PriorityQueue<Map.Entry<String, Integer>> scoreboard = new PriorityQueue<>(
+        // Create priority queue for sorting
+        scoreQueue = new PriorityQueue<>(
             Comparator.comparingInt(Map.Entry<String, Integer>::getValue).reversed()
         );
 
-        // Add all player-score entries to the PriorityQueue
-        scoreboard.addAll(playerScores.entrySet());
+        // Add game-specific scores (TicTacToe, etc)
+        Map<String, Integer> tictactoeWins = TicTacToe.getWins();
+        for (Map.Entry<String, Integer> entry : tictactoeWins.entrySet()) {
+            totalScores.merge(entry.getKey(), entry.getValue(), Integer::sum);
+        }
+
+        // Update priority queue with latest scores
+        updateScoreQueue();
 
         // Display the sorted scoreboard
-        System.out.println("Scoreboard:");
-        while (!scoreboard.isEmpty()) {
-            Map.Entry<String, Integer> entry = scoreboard.poll();
-            System.out.println(entry.getKey() + ": " + entry.getValue());
+        displayScoreboard();
+    }
+
+    public static void updateScore(String playerName, int points) {
+        totalScores.merge(playerName, points, Integer::sum);
+        updateScoreQueue();
+    }
+
+    private static void updateScoreQueue() {
+        scoreQueue.clear();
+        scoreQueue.addAll(totalScores.entrySet());
+    }
+
+    public static void displayScoreboard() {
+        if (scoreQueue.isEmpty()) {
+            System.out.println("\n=== FINAL SCOREBOARD ===");
+            System.out.println("No games have been played yet!");
+            return;
         }
+
+        System.out.println("\n=== FINAL SCOREBOARD ===");
+        System.out.println("Player\t\tTotal Wins");
+        System.out.println("------------------------");
+        
+        // Create temporary queue to preserve the original
+        PriorityQueue<Map.Entry<String, Integer>> tempQueue = new PriorityQueue<>(scoreQueue);
+        
+        while (!tempQueue.isEmpty()) {
+            Map.Entry<String, Integer> entry = tempQueue.poll();
+            System.out.printf("%-15s %d%n", entry.getKey(), entry.getValue());
+        }
+    }
+
+    public static Map<String, Integer> getScores() {
+        return totalScores;
     }
 }

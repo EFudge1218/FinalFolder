@@ -32,23 +32,25 @@ public class GameLauncher {
      * @return
      */
     public static boolean launcher(boolean running) {
-       Scanner scanner = new Scanner(System.in);
-            if (running == true) {
-                System.out.println("Please enter \n 1 for game selection \n 2 to exit menu");
-                int menupick = scanner.nextInt(); // Use the shared Scanner object
-                if (menupick == 1) {
-                   GameChoices gameChoices = new GameChoices(); // Create an instance of GameChoices.
-                    gameChoices.main(args); // Call the main method of GameChoices
-                }
-                if (menupick == 2) {
-                    System.out.println("Thank you for playing");
-                    running = false;
-                } else {
-                    System.out.println("Invalid choice, please try again.");
-                    launcher(running); // Restart the game launcher
-                }
+        Scanner scanner = new Scanner(System.in);
+        if (running == true) {
+            System.out.println("Please enter \n 1 for game selection \n 2 to exit menu");
+            int menupick = scanner.nextInt();
+            if (menupick == 1) {
+                GameChoices gameChoices = new GameChoices();
+                gameChoices.main(args);
             }
-
+            else if (menupick == 2) {
+                System.out.println("Thank you for playing");
+                // Display the scoreboard before exiting
+                Scoreboard.displayScoreboard();
+                running = false;
+                System.exit(0);
+            } else {
+                System.out.println("Invalid choice, please try again.");
+                launcher(running);
+            }
+        }
         return running;
     }
 
@@ -87,5 +89,9 @@ public class GameLauncher {
 
     public int getNumPlayers() {
         return numPlayers; // Return the number of players
+    }
+
+    public List<String> getPlayerNames() {
+        return playerNames;
     }
 }

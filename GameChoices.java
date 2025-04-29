@@ -15,7 +15,7 @@ public class GameChoices {
         GameLauncher gameLauncher = new GameLauncher();
         Scanner scanner = new Scanner(System.in); // Initialize the Scanner object
         int playercount = gameLauncher.getNumPlayers(); // Get the number of players from GameLauncher
-        System.out.println("Please select Game \n 1 for  \n 2 for Tic Tac Toe  \n 3 for  \n 4 to return to Main Menu \n 5 to quit");
+        System.out.println("Please select Game \n 1 for Blackjack  \n 2 for Tic Tac Toe  \n 3 for Country Guesser  \n 4 to return to Main Menu \n 5 to quit");
         int gamechosen = scanner.nextInt();
         
 
@@ -43,7 +43,12 @@ public class GameChoices {
             System.out.println("Returning to main menu");
             GameLauncher.main(args); // Return to the main menu
             gameLauncher.launcher(true);
-        } else {
+        }else if (gamechosen == 5) {
+            System.out.println("Thank you for playing!");
+            Scoreboard.displayScoreboard(); // Display the final scoreboard
+            System.exit(0); // Properly terminate the program
+        } 
+        else {
             System.out.println("Invalid choice, please try again.");
             GameChoices.main(args); // Restart the game selection
         }
