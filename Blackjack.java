@@ -12,59 +12,54 @@ public class Blackjack {
             return;
         }
 
-        List<String> deck = createDeck();
+        Stack<String> deck = createDeck();
         Collections.shuffle(deck);
 
-        Map<String, List<String>> hands = new HashMap<>();
-        List<String> dealerHand = new ArrayList<>(Arrays.asList(deck.remove(0), deck.remove(0)));
-        hands.put("\nDealer", dealerHand);
-
-        // Show dealer's first card
+        // Dealer's hand
+        List<String> dealerHand = new ArrayList<>(Arrays.asList(deck.pop(), deck.pop()));
         System.out.println("\nDealer's first card: " + dealerHand.get(0));
 
-        for (int i = 1; i <= numPlayers; i++) {
-            hands.put("\nPlayer " + i, new ArrayList<>(Arrays.asList(deck.remove(0), deck.remove(0))));
+        // Players' hands
+        List<List<String>> hands = new ArrayList<>();
+        for (int i = 0; i < numPlayers; i++) {
+            hands.add(new ArrayList<>(Arrays.asList(deck.pop(), deck.pop())));
         }
 
         // Player turns
-        for (int i = 1; i <= numPlayers; i++) {
-            String player = "\nPlayer " + i;
-            List<String> hand = new ArrayList<>(hands.get(player));
-            System.out.println(player + "'s turn:");
+        for (int i = 0; i < numPlayers; i++) {
+            System.out.println("\nPlayer " + (i + 1) + "'s turn:");
+            List<String> hand = hands.get(i);
             hand = playerTurn(scanner, hand, deck);
-            hands.put(player, hand);
-            System.out.println();
+            hands.set(i, hand);
         }
 
-        //Dealer's turn
+        // Dealer's turn
         System.out.println("\nDealer's turn:");
         dealerHand = dealerTurn(dealerHand, deck);
-        hands.put("\nDealer", dealerHand);
-        System.out.println();
 
-        //Show hands and determine winner
-        for (String player : hands.keySet()) {
-            List<String> hand = hands.get(player);
-            System.out.println(player + " hand: " + hand + " (Value: " + calculateHand(hand) + ")");
+        // Show hands and determine winner
+        System.out.println("\nDealer's hand: " + dealerHand + " (Value: " + calculateHand(dealerHand) + ")");
+        for (int i = 0; i < numPlayers; i++) {
+            System.out.println("Player " + (i + 1) + "'s hand: " + hands.get(i) + " (Value: " + calculateHand(hands.get(i)) + ")");
         }
 
-        determineWinner(hands);
+        determineWinner(dealerHand, hands);
     }
 
-    // Create deck
-    private static List<String> createDeck() {
+    // Create deck using Stack
+    private static Stack<String> createDeck() {
         String[] ranks = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"};
         String[] suits = {"Hearts", "Diamonds", "Clubs", "Spades"};
-        List<String> deck = new ArrayList<>();
+        Stack<String> deck = new Stack<>();
         for (String rank : ranks) {
             for (String suit : suits) {
-                deck.add(rank + " of " + suit);
+                deck.push(rank + " of " + suit);
             }
         }
         return deck;
     }
 
-    //Calculate hand value
+    // Calculate hand value
     private static int calculateHand(List<String> hand) {
         int value = 0;
         int aceCount = 0;
@@ -79,7 +74,6 @@ public class Blackjack {
                 value += Integer.parseInt(rank);
             }
         }
-        // Adjust for Aces
         while (aceCount > 0 && value + 10 <= 21) {
             value += 10;
             aceCount--;
@@ -87,14 +81,14 @@ public class Blackjack {
         return value;
     }
 
-    //Player's turn
-    private static List<String> playerTurn(Scanner scanner, List<String> hand, List<String> deck) {
+    // Player's turn
+    private static List<String> playerTurn(Scanner scanner, List<String> hand, Stack<String> deck) {
         while (true) {
             System.out.println("\nYour hand: " + hand + " (Value: " + calculateHand(hand) + ")");
             System.out.print("\nHit or Stand? ");
             String action = scanner.next().toLowerCase();
             if (action.equals("hit")) {
-                hand.add(deck.remove(0));
+                hand.add(deck.pop());
                 if (calculateHand(hand) > 21) {
                     System.out.println("\nBust!");
                     return hand;
@@ -108,32 +102,30 @@ public class Blackjack {
     }
 
     // Dealer's turn
-    private static List<String> dealerTurn(List<String> hand, List<String> deck) {
+    private static List<String> dealerTurn(List<String> hand, Stack<String> deck) {
         while (calculateHand(hand) < 17) {
-            hand.add(deck.remove(0));
+            hand.add(deck.pop());
         }
         return hand;
     }
 
     // Determine winner
-    private static void determineWinner(Map<String, List<String>> hands) {
-        int dealerValue = calculateHand(hands.get("\nDealer"));
+    private static void determineWinner(List<String> dealerHand, List<List<String>> playerHands) {
+        int dealerValue = calculateHand(dealerHand);
         if (dealerValue > 21) {
             System.out.println("\nDealer busts! All players still in the game win!");
             return;
         }
-
-        for (String player : hands.keySet()) {
-            if (player.equals("\nDealer")) continue;
-            int playerValue = calculateHand(hands.get(player));
+        for (int i = 0; i < playerHands.size(); i++) {
+            int playerValue = calculateHand(playerHands.get(i));
             if (playerValue > 21) {
-                System.out.println(player + " busts!");
+                System.out.println("Player " + (i + 1) + " busts!");
             } else if (playerValue > dealerValue || dealerValue > 21) {
-                System.out.println(player + " wins!");
+                System.out.println("Player " + (i + 1) + " wins!");
             } else if (playerValue == dealerValue) {
-                System.out.println(player + " ties with the dealer.");
+                System.out.println("Player " + (i + 1) + " ties with the dealer.");
             } else {
-                System.out.println(player + " loses.");
+                System.out.println("Player " + (i + 1) + " loses.");
             }
         }
     }
