@@ -6,11 +6,13 @@ public class CountryGuesserGame {
     
     static {
         continentCountries.put("South America", new HashSet<>(Arrays.asList(
-            "Argentina", "Brazil", "Chile", "Colombia", "Peru", "Venezuela"
+            // Original 6 countries
+            "Argentina", "Brazil", "Chile", "Colombia", "Peru", "Venezuela","Ecuador", "Bolivia", "Paraguay", "Uruguay", "Guyana"
         )));
 
         continentCountries.put("Europe", new HashSet<>(Arrays.asList(
-            "Russia", "Germany", "France", "Turkey", "England"
+            // Original 5 countries
+            "Russia", "Germany", "France", "Turkey", "England","Italy", "Spain", "Ukraine", "Poland", "Romania"
         )));
     }
 
@@ -70,9 +72,9 @@ public class CountryGuesserGame {
             }
 
             if (isTie) {
-                System.out.println("\n🤝 It's a tie!");
+                System.out.println("\n It's a tie!");
             } else {
-                System.out.println("\n🏆 " + winner + " wins!");
+                System.out.println("\n " + winner + " wins!");
                 countryGuesserWins.merge(winner, 1, Integer::sum);
                 Scoreboard.updateScore(winner, 1);
             }
