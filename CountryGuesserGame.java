@@ -1,9 +1,9 @@
 import java.util.*;
 
 public class CountryGuesserGame {
-    // Map of continent names, and sets of countries
+    private static Map<String, Integer> countryGuesserWins = new HashMap<>();
     private static final Map<String, Set<String>> continentCountries = new HashMap<>();
-    // Static block to list the  countries for each continent
+    
     static {
         continentCountries.put("South America", new HashSet<>(Arrays.asList(
             "Argentina", "Bolivia", "Brazil", "Chile", "Colombia", "Ecuador", "Guyana",
@@ -21,66 +21,90 @@ public class CountryGuesserGame {
         )));
     }
 
-    // Main
     public static void main(String[] args) {
+        playGame(args);
+    }
+
+    public static void playGame(String[] args) {
         GameLauncher gameLauncher = new GameLauncher();
         List<String> playerNames = gameLauncher.getPlayerNames();
         
+        if (playerNames.isEmpty()) {
+            playerNames = gameLauncher.playerAdd();
+        }
+
+        boolean playAgain = true;
         Scanner scanner = new Scanner(System.in);
-        Map<String, Integer> playerScores = new HashMap<>();
-        
-        // Initialize scores for each player
-        for (String player : playerNames) {
-            playerScores.put(player, 0);
-        }
-        
-        Set<String> guessedCountries = new HashSet<>();
-        int rounds = 5; // Number of turns each player gets
 
-        System.out.println("Welcome to the Country Guesser Game!");
-
-        // Game loop
-        for (int turn = 1; turn <= rounds; turn++) {
-            for (String player : playerNames) {
-                System.out.println("\nTurn " + turn + " - " + player + ":");
-                int score = takeTurn(scanner, guessedCountries);
-                playerScores.merge(player, score, Integer::sum);
-            }
-        }
-
-        // Display final results
-        System.out.println("\n--- Final Scores ---");
-        String winner = null;
-        int highestScore = -1;
-        boolean isTie = false;
-
-        for (Map.Entry<String, Integer> entry : playerScores.entrySet()) {
-            System.out.println(entry.getKey() + ": " + entry.getValue());
+        while (playAgain) {
+            System.out.println("\nWelcome to the Country Guesser Game!");
+            System.out.println("Each player will take turns guessing countries.");
             
-            if (entry.getValue() > highestScore) {
-                highestScore = entry.getValue();
-                winner = entry.getKey();
-                isTie = false;
-            } else if (entry.getValue() == highestScore) {
-                isTie = true;
+            Map<String, Integer> playerScores = new HashMap<>();
+            for (String player : playerNames) {
+                playerScores.put(player, 0);
+            }
+            
+            Set<String> guessedCountries = new HashSet<>();
+            int rounds = 5;
+
+            // Game loop
+            for (int turn = 1; turn <= rounds; turn++) {
+                System.out.println("\n=== Round " + turn + " ===");
+                for (String player : playerNames) {
+                    System.out.println("\n" + player + "'s turn:");
+                    int score = takeTurn(scanner, guessedCountries);
+                    playerScores.merge(player, score, Integer::sum);
+                }
+            }
+
+            // Display round results
+            System.out.println("\n=== Final Scores ===");
+            String winner = null;
+            int highestScore = -1;
+            boolean isTie = false;
+
+            for (Map.Entry<String, Integer> entry : playerScores.entrySet()) {
+                System.out.println(entry.getKey() + ": " + entry.getValue());
+                
+                if (entry.getValue() > highestScore) {
+                    highestScore = entry.getValue();
+                    winner = entry.getKey();
+                    isTie = false;
+                } else if (entry.getValue() == highestScore) {
+                    isTie = true;
+                }
+            }
+
+            if (isTie) {
+                System.out.println("\n🤝 It's a tie!");
+            } else {
+                System.out.println("\n🏆 " + winner + " wins!");
+                countryGuesserWins.merge(winner, 1, Integer::sum);
+                Scoreboard.updateScore(winner, 1);
+            }
+
+            // Ask to play again
+            System.out.println("\nWould you like to:");
+            System.out.println("1. Play again");
+            System.out.println("2. Return to main menu");
+            System.out.print("Enter your choice (1-2): ");
+            
+            String choice = scanner.nextLine().trim();
+
+            if (choice.equals("2")) {
+                System.out.println("\nReturning to main menu...");
+                GameChoices.main(args);
+                return;
+            } else if (!choice.equals("1")) {
+                System.out.println("\nInvalid choice. Returning to main menu...");
+                GameChoices.main(args);
+                return;
             }
         }
-
-        if (isTie) {
-            System.out.println("🤝 It's a tie!");
-        } else {
-            System.out.println("🏆 " + winner + " wins!");
-            // Update the main scoreboard
-            Scoreboard.updateScore(winner, 1);
-        }
-
-        scanner.close();
-        gameLauncher.launcher(true); // Return to main menu
     }
 
-    // This uses a single player's turn
     private static int takeTurn(Scanner scanner, Set<String> guessedCountries) {
-        // Show the available continents from the map
         List<String> continents = new ArrayList<>(continentCountries.keySet());
         for (int i = 0; i < continents.size(); i++) {
             System.out.println((i + 1) + ". " + continents.get(i));
@@ -101,13 +125,11 @@ public class CountryGuesserGame {
         System.out.print("Guess a country in " + selectedContinent + ": ");
         String guess = capitalize(scanner.nextLine().trim());
 
-        // Check if guess was already made
         if (guessedCountries.contains(guess)) {
             System.out.println("Already guessed! No points.");
             return 0;
         }
 
-        // Check if guess is correct
         if (validCountries.contains(guess)) {
             guessedCountries.add(guess);
             System.out.println("Correct!");
@@ -118,7 +140,6 @@ public class CountryGuesserGame {
         }
     }
 
-    // Capitalizes the first letter of each word
     private static String capitalize(String input) {
         String[] words = input.toLowerCase().split(" ");
         StringBuilder sb = new StringBuilder();
@@ -130,5 +151,9 @@ public class CountryGuesserGame {
             }
         }
         return sb.toString().trim();
+    }
+
+    public static Map<String, Integer> getWins() {
+        return countryGuesserWins;
     }
 }

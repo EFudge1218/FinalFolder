@@ -32,12 +32,11 @@ public class GameChoices {
             } 
         }   
         else if (gamechosen == 3) {
-            if (gameLauncher.numPlayers == 1) {
-                Blackjack.main(args);
-                GameChoices.main(args); // Return to the game selection
-            } else if (gameLauncher.numPlayers > 4) {
-                System.out.println("Too many players for this game, Maximum number is 4.");
-                GameChoices.main(args); // Restart the game selection
+            if (gameLauncher.numPlayers >= 1 && gameLauncher.numPlayers <= 4) {
+                CountryGuesserGame.main(args);
+            } else {
+                System.out.println("Invalid number of players. Country Guesser supports 1-4 players.");
+                GameChoices.main(args);
             }
         } else if (gamechosen == 4) {
             System.out.println("Returning to main menu");
