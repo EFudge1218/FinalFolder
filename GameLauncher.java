@@ -5,21 +5,22 @@ import java.util.Scanner;
 
 public class GameLauncher {
     public int []scoring;
-    public int numPlayers;
+    public static int numPlayers;
     public static Object playerAdd;
-    public Scanner scanner; // Declare a single Scanner object
+    static String[] args;
+     // Declare a single Scanner object
     GameLauncher() {
         // Initialize the Scanner object
-        scanner = new Scanner(System.in);
+       
     }
 
-    boolean running;
+    static boolean running;
 
     public static void main(String[] args) {
-        GameLauncher game = new GameLauncher();
-        game.running = true;
-        game.playerAdd();
-        game.launcher(game.running);
+
+        running = true;
+        playerAdd();
+        launcher(running);
     }
 
     /**
@@ -30,18 +31,18 @@ public class GameLauncher {
      * @param running
      * @return
      */
-    public boolean launcher(boolean running) {
-            if (this.running == true) {
+    public static boolean launcher(boolean running) {
+       Scanner scanner = new Scanner(System.in);
+            if (running == true) {
                 System.out.println("Please enter \n 1 for game selection \n 2 to exit menu");
                 int menupick = scanner.nextInt(); // Use the shared Scanner object
                 if (menupick == 1) {
-                    @SuppressWarnings("unused")
-                    GameChoices gameChoices = new GameChoices(); // Create an instance of GameChoices.
-                    GameChoices.main(null); // Call the main method of GameChoices
+                   GameChoices gameChoices = new GameChoices(); // Create an instance of GameChoices.
+                    gameChoices.main(args); // Call the main method of GameChoices
                 }
                 if (menupick == 2) {
                     System.out.println("Thank you for playing");
-                    this.running = false;
+                    running = false;
                 } else {
                     System.out.println("Invalid choice, please try again.");
                     launcher(running); // Restart the game launcher
@@ -51,8 +52,9 @@ public class GameLauncher {
         return running;
     }
 
-    private List<String> playerNames = new ArrayList<>();
-    public List<String> playerAdd() {
+    private static List<String> playerNames = new ArrayList<>();
+    public static List<String> playerAdd() {
+    Scanner scanner = new Scanner(System.in);
     playerNames.clear(); // Clear any existing names
     while (true) {
         System.out.print("Please enter number of players (1-4): ");
@@ -81,5 +83,9 @@ public class GameLauncher {
     }
 
         return playerNames; // Return the list of player names
-        }
+    }
+
+    public int getNumPlayers() {
+        return numPlayers; // Return the number of players
+    }
 }
