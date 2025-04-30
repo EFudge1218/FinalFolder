@@ -65,6 +65,12 @@ public class Scoreboard {
             totalScores.merge(entry.getKey(), entry.getValue(), Integer::sum);
         }
 
+        // Add Connect Four wins to total scores
+        Map<String, Integer> connectFourWins = ConnectFourWithGraph.getWins();
+        for (Map.Entry<String, Integer> entry : connectFourWins.entrySet()) {
+            totalScores.merge(entry.getKey(), entry.getValue(), Integer::sum);
+        }
+
         // Update priority queue with latest scores
         updateScoreQueue();
 
