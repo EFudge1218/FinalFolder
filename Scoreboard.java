@@ -86,7 +86,7 @@ public class Scoreboard {
 
     /**
      * Updates the priority queue with the latest scores from totalScores.
-     * Clears the existing queue and rebuilds it with current scores.
+     *
      */
     private static void updateScoreQueue() {
         scoreQueue.clear();
@@ -94,9 +94,7 @@ public class Scoreboard {
     }
 
     /**
-     * Displays the current scoreboard in descending order of scores.
-     * If no games have been played, displays an appropriate message.
-     * Uses a temporary queue to preserve the original score ordering.
+     * Displays the current scoreboard in descending order
      */
     public static void displayScoreboard() {
         if (scoreQueue.isEmpty()) {

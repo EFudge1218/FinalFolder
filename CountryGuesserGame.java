@@ -33,7 +33,7 @@ public class CountryGuesserGame {
 
         while (playAgain) {
             System.out.println("\nWelcome to the Country Guesser Game!");
-            System.out.println("Each player will take turns guessing the 5 most populated countries in both Europe and South America.");
+            System.out.println("Each player will take turns guessing countries in either South America or Europe, your job is to guess 5 of the top 10 most populated countries in the continent of your choice!");
             
             Map<String, Integer> playerScores = new HashMap<>();
             for (String player : playerNames) {
