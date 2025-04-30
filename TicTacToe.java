@@ -4,12 +4,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class TicTacToe {
+    //Uses Encapsulation because the private tictactoeWins is accessed through the public method getWins 
     private static Map<String, Integer> tictactoeWins = new HashMap<>();
 
     TicTacToe(){
         
     }
     
+    //This method uses ArrayList to link the players to variables 'X' or 'O'
     public static void startGame(List<String> playerNames, String[] args) {
         Scanner scanner = new Scanner(System.in);
         
@@ -46,7 +48,7 @@ public class TicTacToe {
             //Single game loop
             while (true) {
 
-                //Display the board
+                //Display the board 
                 printBoard(board);
 
                 //Prompt the current player to make a move
@@ -99,6 +101,8 @@ public class TicTacToe {
         }
     }
     
+    //The ArrayList in this method takes the player names from GameLauncher class 
+    //Then assigns them to a variable through the startGame method
     public static void main(String[] args) {
         GameLauncher gameLauncher = new GameLauncher();
         List<String> playerNames = gameLauncher.getPlayerNames();
@@ -112,6 +116,7 @@ public class TicTacToe {
     }
 
     //Method to print the current state of the board
+    //Uses Abstraction to call the char[][] board method instead rewriting the code
     public static void printBoard(char[][] board) {
 
         System.out.println("-------------");
@@ -131,6 +136,7 @@ public class TicTacToe {
     }
 
     //Method to check if a player has won
+    //Uses Abstraction to call the char[][] board method instead rewriting the code
     public static boolean checkWin(char[][] board, char player) {
 
         //Check rows
@@ -171,6 +177,7 @@ public class TicTacToe {
     }
 
     //Method to check if the board is full
+    //Uses Abstraction to call the char[][] board method instead rewriting the code
     public static boolean isBoardFull(char[][] board) {
 
         for (int i = 0; i < 3; i++) {

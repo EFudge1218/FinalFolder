@@ -1,6 +1,8 @@
 import java.util.*;
 
 public class Blackjack {
+
+    //Uses Encapsulation because the private blackjackWins is accessed through the public method getWins 
     private static Map<String, Integer> blackjackWins = new HashMap<>();
 
     public static void main(String[] args) {
@@ -12,7 +14,7 @@ public class Blackjack {
         boolean playAgain = true;
 
         while (playAgain) {
-            // Get player information from GameLauncher
+            //Get player information from GameLauncher
             GameLauncher gameLauncher = new GameLauncher();
             List<String> playerNames = gameLauncher.getPlayerNames();
             int numPlayers = playerNames.size();
@@ -28,14 +30,17 @@ public class Blackjack {
                 System.out.println("- " + playerName);
             }
 
+            //Uses Collections import to shuffle the deck
             Stack<String> deck = createDeck();
             Collections.shuffle(deck);
 
-            // Dealer's hand
+            //Dealer's hand
+            //Uses ArrayList to hold the cards in the dealers hand
             List<String> dealerHand = new ArrayList<>(Arrays.asList(deck.pop(), deck.pop()));
             System.out.println("\nDealer's first card: " + dealerHand.get(0));
 
-            // Players' hands
+            //Players' hands
+            //Used ArrayList to hold the cards in the players hands and add more if they choose to hit
             List<List<String>> hands = new ArrayList<>();
             for (int i = 0; i < numPlayers; i++) {
                 hands.add(new ArrayList<>(Arrays.asList(deck.pop(), deck.pop())));
@@ -82,7 +87,8 @@ public class Blackjack {
         }
     }
 
-    // Create deck using Stack
+    //Uses Abstraction to create the 52 card deck without listing out every possible card
+    //Create deck using Stack, mimics Push and Pop functions when cards are drawn from the deck
     private static Stack<String> createDeck() {
         String[] ranks = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"};
         String[] suits = {"Hearts", "Diamonds", "Clubs", "Spades"};
@@ -95,7 +101,8 @@ public class Blackjack {
         return deck;
     }
 
-    // Calculate hand value
+    //Calculate hand value
+    //Uses Abstraction to compute the hand value and Ace card value depending on the rest of the hand
     private static int calculateHand(List<String> hand) {
         int value = 0;
         int aceCount = 0;
@@ -117,7 +124,8 @@ public class Blackjack {
         return value;
     }
 
-    // Player's turn
+    //Player's turn
+    //Uses Abstraction to handle the hit/stand behaviour during player hand
     private static List<String> playerTurn(Scanner scanner, List<String> hand, Stack<String> deck) {
         while (true) {
             System.out.println("\nYour hand: " + hand + " (Value: " + calculateHand(hand) + ")");
@@ -137,7 +145,8 @@ public class Blackjack {
         }
     }
 
-    // Dealer's turn
+    //Dealer's turn
+    //Uses Abstraction for the dealers behaviour based on the rules of blackjack
     private static List<String> dealerTurn(List<String> hand, Stack<String> deck) {
         while (calculateHand(hand) < 17) {
             hand.add(deck.pop());
@@ -145,7 +154,8 @@ public class Blackjack {
         return hand;
     }
 
-    // Determine winner
+    //Determine winner
+    //Uses Abstraction to determine the winner and assign the wins
     private static void determineWinner(List<String> dealerHand, List<List<String>> playerHands) {
         int dealerValue = calculateHand(dealerHand);
         GameLauncher gameLauncher = new GameLauncher();
