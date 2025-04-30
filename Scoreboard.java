@@ -47,7 +47,7 @@ public class Scoreboard {
             Comparator.comparingInt(Map.Entry<String, Integer>::getValue).reversed()
         );
 
-        // Add game-specific scores (TicTacToe, etc)
+        // Add TicTacToe scores to total scores
         Map<String, Integer> tictactoeWins = TicTacToe.getWins();
         for (Map.Entry<String, Integer> entry : tictactoeWins.entrySet()) {
             totalScores.merge(entry.getKey(), entry.getValue(), Integer::sum);
